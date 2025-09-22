@@ -151,6 +151,12 @@ body {
     color: #664d03;
 }
 
+.pill-completed {
+    background: #d4edda; /* light green background */
+    color: #155724; /* dark green text */
+}
+
+
 /* Progress bars */
 /* Progress container */
 .progress {
@@ -322,4 +328,16 @@ body {
         background-color: #a71f1f;
         color: #fff;
     }
+
+.btn-theme-success {
+    background-color: #28a745; /* Bootstrap green */
+    color: #fff;
+    border: none;
+}
+
+    .btn-theme-success:hover {
+        background-color: #218838;
+        color: #fff;
+    }
+
 

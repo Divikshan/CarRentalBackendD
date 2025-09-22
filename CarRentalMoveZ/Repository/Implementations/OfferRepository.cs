@@ -36,7 +36,7 @@ namespace CarRentalMoveZ.Repository.Implementations
         public async Task<List<Offer>> GetActiveOffersAsync()
         {
             return await _context.Offers
-                .Where(o => o.Status == "Active" && o.StartDate <= DateTime.Now && o.EndDate >= DateTime.Now)
+                .Where(o =>o.StartDate <= DateTime.Now && o.EndDate >= DateTime.Now)
                 .ToListAsync();
         }
 

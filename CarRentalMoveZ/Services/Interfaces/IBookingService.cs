@@ -27,5 +27,7 @@ namespace CarRentalMoveZ.Services.Interfaces
 
         Task<IEnumerable<BookingDTO>> GetDriverAssignedBookingsAsync(int driverId);
 
+        void CompleteBooking(int bookingId);
+
     }
 }
