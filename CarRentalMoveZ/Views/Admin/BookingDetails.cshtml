@@ -110,12 +110,12 @@
                                                         Model.DriverId
                                                         ),
                                                         "-- Select Driver --",
-                                                        new { @class = "form-select" }
+                                                        new { @class = "form-select", id = "driverDropdown" }
                                                         )
                         </div>
                                                 }
                             <div class="col-12 col-md-4 d-grid">
-                                <button type="submit" class="btn btn-primary w-100">Assign</button>
+                                <button type="submit" class="btn btn-primary w-100" id="assignBtn">Assign</button>
                             </div>
                         </div>
 
@@ -126,3 +126,16 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    document.getElementById("assignBtn").addEventListener("click", function(e) {
+        var dropdown = document.getElementById("driverDropdown");
+
+        // Check if dropdown exists and has no real options
+        if (!dropdown || dropdown.options.length <= 1) { // only "-- Select Driver --"
+            e.preventDefault(); // stop form submission
+            alert("No drivers available to assign.");
+        }
+    });
+</script>

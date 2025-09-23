@@ -135,6 +135,26 @@ namespace CarRentalMoveZ.Services.Implementations
                 _paymentRepo.Update(payment);
             }
         }
+        public void CompleteBooking(int bookingId)
+        {
+            var booking = _bookingRepo.GetBooking(bookingId);
+            if (booking == null)
+                throw new InvalidOperationException("Booking not found");
+
+            DateTime now = DateTime.Now;
+
+            // If booking has already ended
+            if (booking.EndDate < now)
+            {
+                booking.Status = "Completed";
+                _bookingRepo.Complete(booking.BookingId); // Assuming UpdateStatus updates the booking
+                return;
+            }
+
+            // Booking has not yet ended
+            throw new InvalidOperationException("Cannot complete booking before the end date.");
+        }
+
 
         public async Task<List<CustomerNotificationDTO>> GetRecentAssignedBookingsAsync(int customerId, int hours = 2)
         {
