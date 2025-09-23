@@ -588,5 +588,27 @@ namespace CarRentalMoveZ.Controllers
             var bookings = await _bookingService.GetDriverAssignedBookingsAsync(driver.DriverId);
             return View(bookings);
         }
+
+        [HttpGet]
+        public IActionResult CompleteBooking(int id)
+        {
+            try
+            {
+                _bookingService.CompleteBooking(id); // Call your business logic
+
+                TempData["SuccessMessage"] = "Booking marked as completed.";
+                return RedirectToAction("ManageBookings"); // Or redirect to a list or details page
+            }
+            catch (InvalidOperationException ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction("ManageBookings"); // Or return an error view
+            }
+            catch (Exception)
+            {
+                TempData["ErrorMessage"] = "An unexpected error occurred.";
+                return RedirectToAction("ManageBookings");
+            }
+        }
     }
 }

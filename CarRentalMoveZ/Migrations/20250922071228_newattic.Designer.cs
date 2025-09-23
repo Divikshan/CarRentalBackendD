@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarRentalMoveZ.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250917130850_faq3")]
-    partial class faq3
+    [Migration("20250922071228_newattic")]
+    partial class newattic
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

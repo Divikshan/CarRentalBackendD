@@ -71,6 +71,15 @@ namespace CarRentalMoveZ.Repository.Implementations
                 _context.SaveChanges();
             }
         }
+        public void Complete(int bookingId)
+        {
+            var booking = _context.Bookings.FirstOrDefault(b => b.BookingId == bookingId);
+            if (booking != null)
+            {
+                booking.Status = "Completed";
+                _context.SaveChanges();
+            }
+        }
 
         public async Task<List<Booking>> GetRecentAssignedBookingsAsync(int customerId, int hours)
         {

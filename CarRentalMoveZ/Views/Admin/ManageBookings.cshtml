@@ -97,6 +97,13 @@
                                     <a asp-action="BookingDetails" asp-route-id="@booking.BookingId" class="btn btn-sm btn-theme">
                                         <i class="bi bi-eye"></i> View
                                     </a>
+                                    @if (booking.EndDate < DateTime.Now && booking.Status!="Completed")
+                                    {
+                                        <a asp-action="CompleteBooking" asp-route-id="@booking.BookingId" class="btn btn-sm btn-theme-success">
+                                            <i class="bi bi-check-circle"></i> Complete
+                                        </a>
+                                    }
+
                                 }
                             </td>
                         </tr>

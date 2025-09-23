@@ -23,6 +23,8 @@ namespace CarRentalMoveZ.Repository.Interfaces
 
         Task<IEnumerable<Booking>> GetByDriverAsync(int driverId);
 
+        void Complete(int bookingId);
+
 
 
     }
