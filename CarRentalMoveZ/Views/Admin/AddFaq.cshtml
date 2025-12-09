@@ -1,68 +1,63 @@
-﻿@model CarRentalMoveZ.ViewModels.FaqViewModel
+﻿// ==============================
+// Variables
+// ==============================
+$primary-color: #1e56a0;
+$radius: 12px;
+$shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.08);
 
-@{
-    ViewData["Title"] = "Add FAQ";
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+// ==============================
+// Card
+// ==============================
+.card {
+  border-radius: $radius;
+  box-shadow: $shadow-lg;
+
+  &-header {
+    background-color: $primary-color;
+    color: #fff;
+    border-top-left-radius: $radius;
+    border-top-right-radius: $radius;
+  }
 }
 
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-lg border-0 rounded-3">
-                <div class="card-header" style="background-color: #1E56A0; color: white;">
-                    <h4 class="mb-0">Add New FAQ</h4>
-                </div>
-                <div class="card-body p-4">
+// ==============================
+// Form elements
+// ==============================
+label {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
 
-                    <!-- Error Message -->
-                    @if (TempData["ErrorMessage"] != null)
-                    {
-                        <div class="alert alert-danger mb-3">
-                            @TempData["ErrorMessage"]
-                        </div>
-                    }
+.form-control,
+.form-select {
+  border-radius: 8px;
+  padding: 10px 12px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
-                    <form asp-action="AddFaq" method="post">
-                        @Html.AntiForgeryToken()
+  &:focus {
+    border-color: $primary-color;
+    box-shadow: 0 0 0 0.15rem rgba(30, 86, 160, 0.25);
+  }
+}
 
-                        <!-- Question -->
-                        <div class="mb-3">
-                            <label asp-for="Question" class="form-label fw-semibold"></label>
-                            <input asp-for="Question" class="form-control" placeholder="Enter FAQ question" />
-                            <span asp-validation-for="Question" class="text-danger"></span>
-                        </div>
+// ==============================
+// Buttons
+// ==============================
+.btn-primary-custom {
+  background-color: $primary-color;
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 10px 20px;
+  transition: all 0.25s ease;
 
-                        <!-- Answer -->
-                        <div class="mb-3">
-                            <label asp-for="Answer" class="form-label fw-semibold"></label>
-                            <textarea asp-for="Answer" class="form-control" rows="4" placeholder="Enter FAQ answer"></textarea>
-                            <span asp-validation-for="Answer" class="text-danger"></span>
-                        </div>
+  &:hover {
+    background-color: darken($primary-color, 6%);
+    transform: translateY(-1px);
+  }
+}
 
-                        <!-- Buttons -->
-                        <div class="d-flex justify-content-end mt-3">
-                            <a asp-action="ManageFaq" class="btn btn-secondary px-4 me-2">Back</a>
-                            <button type="submit" class="btn px-4" style="background-color: #1E56A0; color: white;">
-                                Add FAQ
-                            </button>
-                        </div>
-
-                    </form>
-
-                    <!-- Success Message -->
-                    @* @if (TempData["SuccessMessage"] != null)
-                    {
-                        <div class="alert alert-success mt-3">
-                            @TempData["SuccessMessage"]
-                        </div>
-                    } *@
-
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+.btn-secondary {
+  border-radius: 8px;
 }
