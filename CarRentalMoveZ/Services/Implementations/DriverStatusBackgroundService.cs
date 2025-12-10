@@ -9,7 +9,7 @@ namespace CarRentalMoveZ.Services.Implementations
     public class DriverStatusBackgroundService : IHostedService, IDisposable
     {
         private readonly IServiceProvider _serviceProvider;
-        private Timer _timer;
+        private Timer? _timer;
 
         public DriverStatusBackgroundService(IServiceProvider serviceProvider)
         {
@@ -23,13 +23,23 @@ namespace CarRentalMoveZ.Services.Implementations
             return Task.CompletedTask;
         }
 
-        private void UpdateDriverStatus(object state)
+        private void UpdateDriverStatus(object? state)
         {
-            // Create a scope for scoped services
-            using (var scope = _serviceProvider.CreateScope())
+            try
             {
-                var driverRepository = scope.ServiceProvider.GetRequiredService<IDriverRepository>();
-                driverRepository.UpdateDriverStatusBasedOnLastBooking();
+                // Create a scope for scoped services
+                using (var scope = _serviceProvider.CreateScope())
+                {
+                    var driverRepository = scope.ServiceProvider.GetRequiredService<IDriverRepository>();
+                    driverRepository.UpdateDriverStatusBasedOnLastBooking();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log error but don't crash the application
+                // Database connection errors are expected if SQL Server is not running
+                // The API can still function for testing without the database
+                Console.WriteLine($"Background service error (database may be unavailable): {ex.Message}");
             }
         }
 

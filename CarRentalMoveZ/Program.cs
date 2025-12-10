@@ -7,6 +7,10 @@ using CarRentalMoveZ.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Text;
 
 namespace CarRentalMoveZ
 {
@@ -17,7 +21,8 @@ namespace CarRentalMoveZ
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllers();
+            builder.Services.AddControllersWithViews(); // Keep for backward compatibility
 
             builder.Services.AddDbContext<AppDbContext>(options =>
            options.UseSqlServer(builder.Configuration.GetConnectionString("CarRentalData")));
@@ -52,6 +57,7 @@ namespace CarRentalMoveZ
             builder.Services.AddScoped<IOfferService, OfferService>();
             builder.Services.AddScoped<IDashboardService,DashboardService>();
             builder.Services.AddScoped<IFaqService,FaqService>();
+            builder.Services.AddScoped<IJwtService, JwtService>();
             builder.Services.AddHostedService<DriverStatusBackgroundService>();
             // Register EmailService as singleton (or scoped)
             builder.Services.AddSingleton<EmailService>();
@@ -61,20 +67,98 @@ namespace CarRentalMoveZ
 
             builder.Services.AddSession();
 
-            // ✅ Google Authentication
+            // JWT Authentication
+            var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key not configured");
+            var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "CarRentalAPI";
+            var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "CarRentalFrontend";
+
             builder.Services.AddAuthentication(options =>
             {
-                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            .AddCookie()
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtIssuer,
+                    ValidAudience = jwtAudience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+                    ClockSkew = TimeSpan.Zero
+                };
+            })
+            // Keep Cookie and Google authentication for backward compatibility
+            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddGoogle(options =>
             {
                 options.ClientId = "732717088288-vrbfddmegpr076h0e9f7lear2ibdldhr.apps.googleusercontent.com";
                 options.ClientSecret = "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";
-                options.CallbackPath = "/signin-google"; // Must match Google Console
+                options.CallbackPath = "/signin-google";
                 options.Scope.Add("email");
                 options.Scope.Add("profile");
+            });
+
+            // Authorization Policies
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+                options.AddPolicy("CustomerOnly", policy => policy.RequireRole("Customer"));
+                options.AddPolicy("StaffOnly", policy => policy.RequireRole("Staff"));
+                options.AddPolicy("DriverOnly", policy => policy.RequireRole("Driver"));
+            });
+
+            // CORS Configuration
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend", policy =>
+                {
+                    policy.WithOrigins("http://localhost:4200", "https://localhost:4200")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials();
+                });
+            });
+
+            // Swagger/OpenAPI
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Car Rental API",
+                    Version = "v1",
+                    Description = "API for Car Rental Management System"
+                });
+
+                // Add JWT authentication to Swagger
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Enter 'Bearer' [space] and then your token",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
             });
 
             var app = builder.Build();
@@ -84,8 +168,16 @@ namespace CarRentalMoveZ
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
+            }
+            else
+            {
+                // Enable Swagger UI in development
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Car Rental API v1");
+                });
             }
 
             app.UseHttpsRedirection();
@@ -93,11 +185,18 @@ namespace CarRentalMoveZ
 
             app.UseRouting();
 
-            // ✅ Add Authentication middleware BEFORE Authorization
+            // CORS must be before UseAuthentication and UseAuthorization
+            app.UseCors("AllowFrontend");
+
+            // Add Authentication middleware BEFORE Authorization
             app.UseAuthentication();
 
             app.UseAuthorization();
 
+            // API Routes
+            app.MapControllers();
+
+            // MVC Routes (for backward compatibility)
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
