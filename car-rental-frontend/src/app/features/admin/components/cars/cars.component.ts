@@ -81,7 +81,27 @@ export class CarsComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.error = err?.message || 'Failed to load cars';
+        console.error('Error loading cars:', err);
+        // Extract error message from different possible error structures
+        let errorMessage = 'Failed to load cars';
+        if (err?.error?.message) {
+          errorMessage = err.error.message;
+        } else if (err?.message) {
+          errorMessage = err.message;
+        } else if (err?.error?.errors && Array.isArray(err.error.errors)) {
+          errorMessage = err.error.errors.join(', ');
+        }
+        
+        // Add status code info for debugging
+        if (err?.status === 400) {
+          errorMessage += ' (Bad Request - Please check your authentication or contact support)';
+        } else if (err?.status === 401) {
+          errorMessage = 'Unauthorized - Please login again';
+        } else if (err?.status === 403) {
+          errorMessage = 'Access denied - You do not have permission to view cars';
+        }
+        
+        this.error = errorMessage;
         this.loading = false;
       }
     });

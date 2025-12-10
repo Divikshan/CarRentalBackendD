@@ -24,6 +24,16 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         errorMessage = error.message;
       }
 
+      // Log error details for debugging
+      if (error.status === 400) {
+        console.error('Bad Request Error:', {
+          url: error.url,
+          status: error.status,
+          error: error.error,
+          message: errorMessage
+        });
+      }
+
       return throwError(() => ({
         ...error,
         message: errorMessage,

@@ -25,11 +25,17 @@ export class ApiService {
   }
 
   post<T>(endpoint: string, body: any): Observable<ApiResponse<T>> {
-    return this.http.post<ApiResponse<T>>(`${this.baseUrl}/${endpoint}`, body);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    return this.http.post<ApiResponse<T>>(`${this.baseUrl}/${endpoint}`, body, { headers });
   }
 
   put<T>(endpoint: string, body: any): Observable<ApiResponse<T>> {
-    return this.http.put<ApiResponse<T>>(`${this.baseUrl}/${endpoint}`, body);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    return this.http.put<ApiResponse<T>>(`${this.baseUrl}/${endpoint}`, body, { headers });
   }
 
   delete<T>(endpoint: string): Observable<ApiResponse<T>> {
