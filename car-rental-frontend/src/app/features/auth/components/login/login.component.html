@@ -1,98 +1,89 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-md w-full space-y-8">
-    <div>
-      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-        Sign in to your account
-      </h2>
-    </div>
-    <form class="mt-8 space-y-6" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <div class="rounded-md shadow-sm -space-y-px">
-        <div>
-          <label for="email" class="sr-only">Email address</label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            formControlName="email"
-            required
-            class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
-            placeholder="Email address"
-          />
-          @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
-            <p class="mt-1 text-sm text-red-600">Please enter a valid email</p>
-          }
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full">
+    <mat-card class="shadow-2xl border-0">
+      <mat-card-header class="text-center pb-4">
+        <div class="w-full flex flex-col items-center">
+          <div class="bg-gradient-to-br from-blue-500 to-purple-600 rounded-full p-4 mb-4 shadow-lg">
+            <mat-icon class="text-white text-4xl">directions_car</mat-icon>
+          </div>
+          <mat-card-title class="text-3xl font-bold text-gray-900 mb-2">
+            Welcome Back
+          </mat-card-title>
+          <mat-card-subtitle class="text-gray-600">
+            Sign in to your CarRental account
+          </mat-card-subtitle>
         </div>
-        <div>
-          <label for="password" class="sr-only">Password</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            formControlName="password"
-            required
-            class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
-            placeholder="Password"
-          />
-          @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
-            <p class="mt-1 text-sm text-red-600">Password is required</p>
-          }
-        </div>
-      </div>
+      </mat-card-header>
+      <mat-card-content>
+        <form class="space-y-6" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Email Address</mat-label>
+            <input matInput type="email" formControlName="email" placeholder="Enter your email" />
+            <mat-icon matPrefix>email</mat-icon>
+            <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
+              Email is required
+            </mat-error>
+            <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
+              Please enter a valid email
+            </mat-error>
+          </mat-form-field>
 
-      <div class="flex items-center justify-between">
-        <div class="flex items-center">
-          <input
-            id="remember-me"
-            name="remember-me"
-            type="checkbox"
-            formControlName="rememberMe"
-            class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
-          />
-          <label for="remember-me" class="ml-2 block text-sm text-gray-900">
-            Remember me
-          </label>
-        </div>
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Password</mat-label>
+            <input matInput [type]="'password'" formControlName="password" placeholder="Enter your password" />
+            <mat-icon matPrefix>lock</mat-icon>
+            <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+              Password is required
+            </mat-error>
+          </mat-form-field>
 
-        <div class="text-sm">
-          <a routerLink="/auth/forgot-password" class="font-medium text-primary-600 hover:text-primary-500">
-            Forgot your password?
-          </a>
-        </div>
-      </div>
+          <div class="flex items-center justify-between">
+            <mat-checkbox formControlName="rememberMe" color="primary">
+              Remember me
+            </mat-checkbox>
+            <a routerLink="/auth/forgot-password" class="text-sm font-medium text-primary-600 hover:text-primary-700">
+              Forgot password?
+            </a>
+          </div>
 
-      @if (errorMessage) {
-        <div class="rounded-md bg-red-50 p-4">
-          <div class="flex">
-            <div class="ml-3">
+          @if (errorMessage) {
+            <div class="rounded-lg bg-red-50 border border-red-200 p-4 flex items-center gap-3">
+              <mat-icon class="text-red-600">error_outline</mat-icon>
               <p class="text-sm font-medium text-red-800">{{ errorMessage }}</p>
             </div>
-          </div>
-        </div>
-      }
-
-      <div>
-        <button
-          type="submit"
-          [disabled]="loginForm.invalid || isLoading"
-          class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          @if (isLoading) {
-            <span>Signing in...</span>
-          } @else {
-            <span>Sign in</span>
           }
-        </button>
-      </div>
 
-      <div class="text-center">
-        <p class="text-sm text-gray-600">
-          Don't have an account?
-          <a routerLink="/auth/register" class="font-medium text-primary-600 hover:text-primary-500">
-            Sign up
-          </a>
-        </p>
-      </div>
-    </form>
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="loginForm.invalid || isLoading"
+            class="w-full py-3 text-lg font-semibold"
+          >
+            @if (isLoading) {
+              <div class="flex items-center justify-center gap-2">
+                <mat-spinner diameter="20"></mat-spinner>
+                <span>Signing in...</span>
+              </div>
+            } @else {
+              <div class="flex items-center justify-center gap-2">
+                <mat-icon>login</mat-icon>
+                <span>Sign In</span>
+              </div>
+            }
+          </button>
+
+          <div class="text-center pt-4 border-t border-gray-200">
+            <p class="text-sm text-gray-600">
+              Don't have an account?
+              <a routerLink="/auth/register" class="font-semibold text-primary-600 hover:text-primary-700 ml-1">
+                Sign up
+              </a>
+            </p>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
   </div>
 </div>
 

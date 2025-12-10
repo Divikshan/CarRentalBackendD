@@ -1,67 +1,129 @@
-<div class="min-h-screen bg-gray-50">
+<div class="min-h-screen">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="flex items-center justify-between mb-6">
-      <h1 class="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h1 class="text-4xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
+        <p class="text-gray-600">Welcome back! Here's what's happening with your business today.</p>
+      </div>
       <button
-        class="rounded-md border border-gray-300 px-3 py-1 text-sm text-gray-700 hover:bg-gray-100"
+        mat-raised-button
+        color="primary"
         (click)="load()"
+        class="flex items-center gap-2"
       >
-        Refresh
+        <mat-icon>refresh</mat-icon>
+        <span>Refresh</span>
       </button>
     </div>
 
-    <div *ngIf="error" class="mb-4 rounded-md bg-red-50 p-4 text-sm text-red-700">
-      {{ error }}
+    <div *ngIf="error" class="mb-6 rounded-lg bg-red-50 border border-red-200 p-4 flex items-center gap-3">
+      <mat-icon class="text-red-600">error_outline</mat-icon>
+      <p class="text-sm font-medium text-red-800">{{ error }}</p>
     </div>
 
-    <div *ngIf="loading" class="text-sm text-gray-600">Loading...</div>
+    <div *ngIf="loading" class="flex items-center justify-center py-12">
+      <mat-spinner diameter="40"></mat-spinner>
+      <span class="ml-4 text-gray-600">Loading dashboard data...</span>
+    </div>
 
     <ng-container *ngIf="!loading && stats">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div class="rounded-lg bg-white shadow p-4">
-          <p class="text-sm text-gray-500">Total Bookings</p>
-          <p class="text-2xl font-semibold text-gray-900">{{ stats.totalBookings }}</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg p-6 text-white transform hover:scale-105 transition-transform duration-200">
+          <div class="flex items-center justify-between mb-4">
+            <mat-icon class="text-white opacity-90">book_online</mat-icon>
+            <div class="bg-white bg-opacity-20 rounded-full p-2">
+              <mat-icon class="text-white">trending_up</mat-icon>
+            </div>
+          </div>
+          <p class="text-sm font-medium text-blue-100 mb-1">Total Bookings</p>
+          <p class="text-3xl font-bold">{{ stats.totalBookings }}</p>
         </div>
-        <div class="rounded-lg bg-white shadow p-4">
-          <p class="text-sm text-gray-500">Total Revenue</p>
-          <p class="text-2xl font-semibold text-gray-900">
-            {{ stats.totalRevenue | currency }}
-          </p>
+
+        <div class="rounded-xl bg-gradient-to-br from-green-500 to-green-600 shadow-lg p-6 text-white transform hover:scale-105 transition-transform duration-200">
+          <div class="flex items-center justify-between mb-4">
+            <mat-icon class="text-white opacity-90">attach_money</mat-icon>
+            <div class="bg-white bg-opacity-20 rounded-full p-2">
+              <mat-icon class="text-white">trending_up</mat-icon>
+            </div>
+          </div>
+          <p class="text-sm font-medium text-green-100 mb-1">Total Revenue</p>
+          <p class="text-3xl font-bold">{{ stats.totalRevenue | currency }}</p>
         </div>
-        <div class="rounded-lg bg-white shadow p-4">
-          <p class="text-sm text-gray-500">Total Customers</p>
-          <p class="text-2xl font-semibold text-gray-900">{{ stats.totalCustomers }}</p>
+
+        <div class="rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 shadow-lg p-6 text-white transform hover:scale-105 transition-transform duration-200">
+          <div class="flex items-center justify-between mb-4">
+            <mat-icon class="text-white opacity-90">people</mat-icon>
+            <div class="bg-white bg-opacity-20 rounded-full p-2">
+              <mat-icon class="text-white">trending_up</mat-icon>
+            </div>
+          </div>
+          <p class="text-sm font-medium text-purple-100 mb-1">Total Customers</p>
+          <p class="text-3xl font-bold">{{ stats.totalCustomers }}</p>
+        </div>
+
+        <div class="rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 shadow-lg p-6 text-white transform hover:scale-105 transition-transform duration-200">
+          <div class="flex items-center justify-between mb-4">
+            <mat-icon class="text-white opacity-90">directions_car</mat-icon>
+            <div class="bg-white bg-opacity-20 rounded-full p-2">
+              <mat-icon class="text-white">check_circle</mat-icon>
+            </div>
+          </div>
+          <p class="text-sm font-medium text-orange-100 mb-1">Available Cars</p>
+          <p class="text-3xl font-bold">{{ stats.availableCars }}</p>
+          <p class="text-xs text-orange-100 mt-1">of {{ stats.totalCars }} total</p>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="rounded-lg bg-white shadow p-4">
-          <p class="text-sm text-gray-500">Available Cars</p>
-          <p class="text-2xl font-semibold text-green-600">{{ stats.availableCars }}</p>
-          <p class="text-xs text-gray-500">Total Cars: {{ stats.totalCars }}</p>
-        </div>
-        <div class="rounded-lg bg-white shadow p-4">
-          <p class="text-sm text-gray-500">Booking Status</p>
-          <div class="mt-2 space-y-1 text-sm">
-            <div class="flex justify-between">
-              <span class="text-gray-600">Booked</span>
-              <span class="font-semibold">{{ stats.bookedCount }}</span>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="rounded-xl bg-white shadow-lg p-6 border border-gray-100">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="bg-blue-100 rounded-lg p-3">
+              <mat-icon class="text-blue-600">assessment</mat-icon>
             </div>
-            <div class="flex justify-between">
-              <span class="text-gray-600">Pending</span>
-              <span class="font-semibold">{{ stats.pendingCount }}</span>
+            <h2 class="text-xl font-semibold text-gray-900">Booking Status</h2>
+          </div>
+          <div class="space-y-4">
+            <div class="flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+              <div class="flex items-center gap-3">
+                <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+                <span class="text-gray-700 font-medium">Booked</span>
+              </div>
+              <span class="text-lg font-bold text-gray-900">{{ stats.bookedCount }}</span>
             </div>
-            <div class="flex justify-between">
-              <span class="text-gray-600">Cancelled</span>
-              <span class="font-semibold">{{ stats.cancelledCount }}</span>
+            <div class="flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+              <div class="flex items-center gap-3">
+                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                <span class="text-gray-700 font-medium">Pending</span>
+              </div>
+              <span class="text-lg font-bold text-gray-900">{{ stats.pendingCount }}</span>
+            </div>
+            <div class="flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+              <div class="flex items-center gap-3">
+                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                <span class="text-gray-700 font-medium">Cancelled</span>
+              </div>
+              <span class="text-lg font-bold text-gray-900">{{ stats.cancelledCount }}</span>
             </div>
           </div>
         </div>
-        <div class="rounded-lg bg-white shadow p-4">
-          <p class="text-sm text-gray-500">Summary</p>
-          <p class="text-sm text-gray-600 mt-2">
-            Stay on top of cars, bookings, customers, staff, drivers, offers, FAQs, and payments.
+
+        <div class="rounded-xl bg-white shadow-lg p-6 border border-gray-100">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="bg-purple-100 rounded-lg p-3">
+              <mat-icon class="text-purple-600">info</mat-icon>
+            </div>
+            <h2 class="text-xl font-semibold text-gray-900">Quick Summary</h2>
+          </div>
+          <p class="text-gray-600 leading-relaxed mb-4">
+            Stay on top of your car rental business with comprehensive management tools. 
+            Monitor cars, bookings, customers, staff, drivers, offers, FAQs, and payments all in one place.
           </p>
+          <div class="flex flex-wrap gap-2">
+            <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">Cars</span>
+            <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Bookings</span>
+            <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">Customers</span>
+            <span class="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-medium">Staff</span>
+          </div>
         </div>
       </div>
     </ng-container>

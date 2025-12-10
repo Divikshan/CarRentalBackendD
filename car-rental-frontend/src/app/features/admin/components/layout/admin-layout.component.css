@@ -1,2 +1,135 @@
-/* Layout styling is driven primarily by Tailwind utility classes. */
+/* Modern Admin Layout Styling */
+
+mat-sidenav-container {
+  height: 100vh;
+  width: 100%;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+mat-sidenav {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08);
+  border-right: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+mat-sidenav-content {
+  min-height: 100vh;
+  background: #f5f7fa;
+}
+
+/* Enhanced Toolbar */
+mat-toolbar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 10;
+}
+
+mat-toolbar::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Sidebar Header */
+.sidebar-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+/* Navigation Items */
+mat-nav-list a {
+  border-radius: 8px;
+  margin: 4px 8px;
+  transition: all 0.2s ease;
+}
+
+mat-nav-list a:hover {
+  background-color: rgba(102, 126, 234, 0.1) !important;
+  transform: translateX(4px);
+}
+
+mat-nav-list a.router-link-active,
+mat-nav-list a.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+mat-nav-list a.router-link-active span,
+mat-nav-list a.active span {
+  color: white !important;
+  font-weight: 600;
+}
+
+mat-nav-list a.router-link-active mat-icon,
+mat-nav-list a.active mat-icon {
+  color: white !important;
+}
+
+/* User Menu Styling */
+.user-menu {
+  min-width: 250px;
+}
+
+.user-menu .mat-mdc-menu-item {
+  height: 48px;
+}
+
+.user-menu .mat-mdc-menu-item mat-icon {
+  margin-right: 12px;
+}
+
+/* Navigation Bar Enhancements */
+mat-toolbar {
+  height: 64px;
+}
+
+/* Search Input Styling */
+input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+input:focus {
+  outline: none;
+}
+
+/* Quick Links Hover Effect */
+a:hover {
+  text-decoration: none;
+}
+
+/* Responsive Navigation Bar */
+@media (max-width: 768px) {
+  mat-toolbar {
+    padding: 0 8px;
+  }
+
+  .user-menu {
+    min-width: 200px;
+  }
+}
+
+/* Navigation Bar Button Hover States */
+button.mat-mdc-icon-button:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 50%;
+}
+
+/* Search Bar Focus State */
+input:focus {
+  background-color: rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+}
+
+/* Secondary Nav Bar Responsive */
+@media (max-width: 640px) {
+  .bg-white.bg-opacity-10 {
+    padding: 8px;
+  }
+}
 

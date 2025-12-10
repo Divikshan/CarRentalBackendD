@@ -1,101 +1,195 @@
-<div class="min-h-screen bg-gray-100 flex">
-  <!-- Sidebar (desktop + mobile toggle) -->
-  <div
-    class="fixed inset-y-0 left-0 z-30 w-64 transform bg-white border-r border-gray-200 transition-transform duration-200 ease-in-out lg:static lg:translate-x-0"
-    [class.-translate-x-full]="!showSidebar && !isDesktop()"
-  >
-    <div class="h-16 flex items-center px-4 border-b border-gray-200 justify-between">
-      <div class="text-lg font-semibold text-gray-800">Admin Panel</div>
-      <button class="lg:hidden text-sm text-gray-500" (click)="closeSidebar()">✕</button>
+<mat-sidenav-container class="h-screen">
+  <mat-sidenav #sidenav mode="side" [opened]="opened" class="w-64">
+    <div class="h-20 flex items-center px-6 sidebar-header">
+      <div class="flex items-center gap-3">
+        <mat-icon class="text-white">directions_car</mat-icon>
+        <div class="text-xl font-bold text-white">CarRental</div>
+      </div>
     </div>
-    <nav class="flex-1 overflow-y-auto py-4">
-      <ul class="space-y-1 px-2">
-        <li>
-          <a routerLink="/admin/dashboard" routerLinkActive="bg-gray-100 text-primary-700"
-             class="flex items-center px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50">
-            Dashboard
-          </a>
-        </li>
-        <li>
-          <a routerLink="/admin/cars" routerLinkActive="bg-gray-100 text-primary-700"
-             class="flex items-center px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50">
-            Cars
-          </a>
-        </li>
-        <li>
-          <a routerLink="/admin/bookings" routerLinkActive="bg-gray-100 text-primary-700"
-             class="flex items-center px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50">
-            Bookings
-          </a>
-        </li>
-        <li>
-          <a routerLink="/admin/customers" routerLinkActive="bg-gray-100 text-primary-700"
-             class="flex items-center px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50">
-            Customers
-          </a>
-        </li>
-        <li>
-          <a routerLink="/admin/staff" routerLinkActive="bg-gray-100 text-primary-700"
-             class="flex items-center px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50">
-            Staff
-          </a>
-        </li>
-        <li>
-          <a routerLink="/admin/drivers" routerLinkActive="bg-gray-100 text-primary-700"
-             class="flex items-center px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50">
-            Drivers
-          </a>
-        </li>
-        <li>
-          <a routerLink="/admin/offers" routerLinkActive="bg-gray-100 text-primary-700"
-             class="flex items-center px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50">
-            Offers
-          </a>
-        </li>
-        <li>
-          <a routerLink="/admin/faqs" routerLinkActive="bg-gray-100 text-primary-700"
-             class="flex items-center px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50">
-            FAQs
-          </a>
-        </li>
-        <li>
-          <a routerLink="/admin/payments" routerLinkActive="bg-gray-100 text-primary-700"
-             class="flex items-center px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50">
-            Payments
-          </a>
-        </li>
-        <li>
-          <a routerLink="/admin/notifications" routerLinkActive="bg-gray-100 text-primary-700"
-             class="flex items-center px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50">
-            Notifications
-          </a>
-        </li>
-      </ul>
-    </nav>
-  </div>
+    <mat-nav-list class="py-4">
+      <a mat-list-item routerLink="/admin/dashboard" routerLinkActive="active">
+        <mat-icon matListItemIcon>dashboard</mat-icon>
+        <span matListItemTitle>Dashboard</span>
+      </a>
+      <a mat-list-item routerLink="/admin/cars" routerLinkActive="active">
+        <mat-icon matListItemIcon>directions_car</mat-icon>
+        <span matListItemTitle>Cars</span>
+      </a>
+      <a mat-list-item routerLink="/admin/bookings" routerLinkActive="active">
+        <mat-icon matListItemIcon>book_online</mat-icon>
+        <span matListItemTitle>Bookings</span>
+      </a>
+      <a mat-list-item routerLink="/admin/customers" routerLinkActive="active">
+        <mat-icon matListItemIcon>people</mat-icon>
+        <span matListItemTitle>Customers</span>
+      </a>
+      <a mat-list-item routerLink="/admin/staff" routerLinkActive="active">
+        <mat-icon matListItemIcon>badge</mat-icon>
+        <span matListItemTitle>Staff</span>
+      </a>
+      <a mat-list-item routerLink="/admin/drivers" routerLinkActive="active">
+        <mat-icon matListItemIcon>local_taxi</mat-icon>
+        <span matListItemTitle>Drivers</span>
+      </a>
+      <a mat-list-item routerLink="/admin/offers" routerLinkActive="active">
+        <mat-icon matListItemIcon>local_offer</mat-icon>
+        <span matListItemTitle>Offers</span>
+      </a>
+      <a mat-list-item routerLink="/admin/faqs" routerLinkActive="active">
+        <mat-icon matListItemIcon>help_outline</mat-icon>
+        <span matListItemTitle>FAQs</span>
+      </a>
+      <a mat-list-item routerLink="/admin/payments" routerLinkActive="active">
+        <mat-icon matListItemIcon>payment</mat-icon>
+        <span matListItemTitle>Payments</span>
+      </a>
+      <a mat-list-item routerLink="/admin/notifications" routerLinkActive="active">
+        <mat-icon matListItemIcon>notifications</mat-icon>
+        <span matListItemTitle>Notifications</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
 
-  <!-- Mobile top bar -->
-  <div class="lg:hidden fixed top-0 inset-x-0 z-20 bg-white border-b border-gray-200">
-    <div class="h-14 flex items-center justify-between px-4">
-      <div class="text-base font-semibold text-gray-800">Admin Panel</div>
-      <button class="text-sm text-gray-700 border border-gray-300 rounded-md px-3 py-1" (click)="toggleSidebar()">
-        Menu
+  <mat-sidenav-content>
+    <!-- Enhanced Navigation Bar -->
+    <div class="bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg">
+      <mat-toolbar class="flex items-center justify-between px-4">
+        <div class="flex items-center gap-4 flex-1">
+          <button mat-icon-button (click)="toggleSidenav()" class="text-white">
+            <mat-icon>menu</mat-icon>
+          </button>
+
+          <!-- Breadcrumb Navigation -->
+          <nav class="flex items-center gap-2 text-white">
+            <a routerLink="/admin/dashboard" class="hover:text-blue-200 transition-colors">
+              <mat-icon class="text-sm">home</mat-icon>
+            </a>
+            <mat-icon class="text-sm opacity-50">chevron_right</mat-icon>
+            <span class="text-sm font-medium">{{ getPageTitle() }}</span>
+          </nav>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="hidden md:flex items-center bg-white bg-opacity-20 rounded-lg px-4 py-2 mx-4 flex-1 max-w-md">
+          <mat-icon class="text-white text-sm mr-2">search</mat-icon>
+          <input
+            type="text"
+            placeholder="Search..."
+            class="bg-transparent border-none outline-none text-white placeholder-white placeholder-opacity-70 w-full text-sm"
+          />
+        </div>
+
+        <!-- Right Side Actions -->
+        <div class="flex items-center gap-2">
+          <!-- Quick Actions -->
+          <button
+            mat-icon-button
+            matTooltip="Quick Actions"
+            class="text-white hover:bg-white hover:bg-opacity-20"
+          >
+            <mat-icon>flash_on</mat-icon>
+          </button>
+
+          <!-- Notifications -->
+          <button
+            mat-icon-button
+            [matBadge]="notificationCount"
+            matBadgeColor="warn"
+            matTooltip="Notifications"
+            routerLink="/admin/notifications"
+            class="text-white hover:bg-white hover:bg-opacity-20"
+          >
+            <mat-icon>notifications</mat-icon>
+          </button>
+
+          <!-- User Menu -->
+          <button
+            mat-icon-button
+            [matMenuTriggerFor]="userMenu"
+            class="text-white hover:bg-white hover:bg-opacity-20"
+          >
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-full bg-white bg-opacity-20 flex items-center justify-center">
+                <mat-icon class="text-sm">account_circle</mat-icon>
+              </div>
+              <span class="hidden md:block text-sm font-medium">{{ currentUser?.name || 'Admin' }}</span>
+              <mat-icon class="text-sm">arrow_drop_down</mat-icon>
+            </div>
+          </button>
+        </div>
+      </mat-toolbar>
+
+      <!-- Secondary Navigation Bar -->
+      <div class="bg-white bg-opacity-10 border-t border-white border-opacity-20 px-4 py-2">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <div class="flex items-center gap-4 flex-wrap">
+            <span class="text-white text-sm font-medium hidden sm:block">Quick Links:</span>
+            <a
+              routerLink="/admin/cars"
+              routerLinkActive="text-blue-200"
+              [routerLinkActiveOptions]="{exact: false}"
+              class="text-white text-sm hover:text-blue-200 transition-colors flex items-center"
+            >
+              <mat-icon class="text-sm mr-1">directions_car</mat-icon>
+              <span class="hidden sm:inline">Cars</span>
+            </a>
+            <a
+              routerLink="/admin/bookings"
+              routerLinkActive="text-blue-200"
+              [routerLinkActiveOptions]="{exact: false}"
+              class="text-white text-sm hover:text-blue-200 transition-colors flex items-center"
+            >
+              <mat-icon class="text-sm mr-1">book_online</mat-icon>
+              <span class="hidden sm:inline">Bookings</span>
+            </a>
+            <a
+              routerLink="/admin/customers"
+              routerLinkActive="text-blue-200"
+              [routerLinkActiveOptions]="{exact: false}"
+              class="text-white text-sm hover:text-blue-200 transition-colors flex items-center"
+            >
+              <mat-icon class="text-sm mr-1">people</mat-icon>
+              <span class="hidden sm:inline">Customers</span>
+            </a>
+          </div>
+          <div class="text-white text-xs opacity-75 hidden md:block">
+            <mat-icon class="text-xs align-middle mr-1">schedule</mat-icon>
+            {{ new Date().toLocaleTimeString() }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Menu -->
+    <mat-menu #userMenu="matMenu" class="user-menu">
+      <div class="px-4 py-3 border-b border-gray-200">
+        <div class="font-semibold text-gray-900">{{ currentUser?.name || 'Admin User' }}</div>
+        <div class="text-sm text-gray-500">{{ currentUser?.email || 'admin@carrental.com' }}</div>
+        <div class="text-xs text-gray-400 mt-1">{{ currentUser?.role || 'Admin' }}</div>
+      </div>
+      <button mat-menu-item (click)="goToProfile()">
+        <mat-icon>person</mat-icon>
+        <span>My Profile</span>
       </button>
-    </div>
-  </div>
+      <button mat-menu-item (click)="goToSettings()">
+        <mat-icon>settings</mat-icon>
+        <span>Settings</span>
+      </button>
+      <button mat-menu-item>
+        <mat-icon>help_outline</mat-icon>
+        <span>Help & Support</span>
+      </button>
+      <mat-divider></mat-divider>
+      <button mat-menu-item (click)="logout()" class="text-red-600">
+        <mat-icon>logout</mat-icon>
+        <span>Logout</span>
+      </button>
+    </mat-menu>
 
-  <!-- Overlay for mobile -->
-  <div
-    class="fixed inset-0 bg-black/30 z-10 lg:hidden"
-    *ngIf="showSidebar"
-    (click)="closeSidebar()"
-  ></div>
-
-  <!-- Main content -->
-  <main class="flex-1 min-h-screen">
-    <div class="lg:pt-0 pt-14">
-      <router-outlet />
+    <!-- Main Content Area -->
+    <div class="p-6 min-h-[calc(100vh-112px)]">
+      <router-outlet></router-outlet>
     </div>
-  </main>
-</div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
 
