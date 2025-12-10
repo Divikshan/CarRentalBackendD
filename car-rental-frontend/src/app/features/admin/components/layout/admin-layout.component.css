@@ -10,6 +10,11 @@ mat-sidenav {
   background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
   box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08);
   border-right: 1px solid rgba(0, 0, 0, 0.05);
+  display: block !important;
+  visibility: visible !important;
+  z-index: 1;
+  width: 256px !important;
+  min-width: 256px !important;
 }
 
 mat-sidenav-content {

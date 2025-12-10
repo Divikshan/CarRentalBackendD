@@ -22,7 +22,7 @@
       <div class="text-base font-semibold text-gray-800">Customer Panel</div>
       <select
         class="text-sm border border-gray-300 rounded-md px-2 py-1"
-        (change)="location.assign(($event.target as HTMLSelectElement).value)"
+        (change)="onNavigationChange($event)"
       >
         <option value="/customer/dashboard">Dashboard</option>
       </select>

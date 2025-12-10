@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-customer-layout',
@@ -9,5 +9,14 @@ import { RouterModule } from '@angular/router';
   templateUrl: './customer-layout.component.html',
   styleUrl: './customer-layout.component.css'
 })
-export class CustomerLayoutComponent {}
+export class CustomerLayoutComponent {
+  constructor(private router: Router) {}
+
+  onNavigationChange(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    if (target && target.value) {
+      this.router.navigate([target.value]);
+    }
+  }
+}
 

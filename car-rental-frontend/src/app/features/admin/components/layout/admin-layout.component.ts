@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { Router, RouterModule, NavigationEnd } from '@angular/router';
 import { MatSidenavModule, MatSidenav } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
@@ -37,7 +37,7 @@ import { User } from '../../../../core/models';
   templateUrl: './admin-layout.component.html',
   styleUrl: './admin-layout.component.css'
 })
-export class AdminLayoutComponent implements OnInit {
+export class AdminLayoutComponent implements OnInit, AfterViewInit {
   @ViewChild('sidenav') sidenav!: MatSidenav;
   opened = true;
   currentUser: User | null = null;
@@ -60,9 +60,23 @@ export class AdminLayoutComponent implements OnInit {
     this.currentRoute = this.router.url;
   }
 
+  ngAfterViewInit(): void {
+    // Ensure sidenav is opened after view initialization
+    // Use setTimeout to allow Material to fully initialize
+    setTimeout(() => {
+      if (this.sidenav) {
+        if (this.opened && !this.sidenav.opened) {
+          this.sidenav.open();
+        }
+      }
+    }, 0);
+  }
+
   toggleSidenav(): void {
-    this.sidenav.toggle();
-    this.opened = this.sidenav.opened;
+    if (this.sidenav) {
+      this.sidenav.toggle();
+      this.opened = this.sidenav.opened;
+    }
   }
 
   getPageTitle(): string {
@@ -106,6 +120,10 @@ export class AdminLayoutComponent implements OnInit {
   goToSettings(): void {
     // Navigate to settings page when implemented
     console.log('Navigate to settings');
+  }
+
+  getCurrentTime(): string {
+    return new Date().toLocaleTimeString();
   }
 }
 
