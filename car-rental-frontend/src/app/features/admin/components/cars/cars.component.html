@@ -1,0 +1,22 @@
+<div class="min-h-screen bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="flex items-center justify-between mb-4">
+      <h1 class="text-2xl font-bold text-gray-900">Cars</h1>
+      <button
+        class="rounded-md border border-gray-300 px-3 py-1 text-sm text-gray-700 hover:bg-gray-100"
+        (click)="load()"
+      >
+        Refresh
+      </button>
+    </div>
+
+    <app-data-table
+      [title]="'Car List'"
+      [columns]="columns"
+      [rows]="rows"
+      [loading]="loading"
+      [error]="error"
+    />
+  </div>
+</div>
+
