@@ -23,6 +23,12 @@ export interface AdminCar {
   pricePerDay: number;
   status: string;
   imgURL?: string;
+  transmission: string;
+  seats: number;
+  fuel: string;
+  topSpeed: number;
+  nextOilChange?: string;
+  tireReplacement?: string;
 }
 
 export interface AdminBooking {
