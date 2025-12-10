@@ -1,22 +1,125 @@
 <div class="min-h-screen bg-gray-50">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="flex items-center justify-between mb-4">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    <div class="flex items-center justify-between">
       <h1 class="text-2xl font-bold text-gray-900">Drivers</h1>
-      <button
-        class="rounded-md border border-gray-300 px-3 py-1 text-sm text-gray-700 hover:bg-gray-100"
-        (click)="load()"
-      >
-        Refresh
-      </button>
+      <div class="flex gap-2">
+        <button
+          class="rounded-md border border-gray-300 px-3 py-1 text-sm text-gray-700 hover:bg-gray-100"
+          (click)="startCreate()"
+        >
+          New Driver
+        </button>
+        <button
+          class="rounded-md border border-gray-300 px-3 py-1 text-sm text-gray-700 hover:bg-gray-100"
+          (click)="load()"
+        >
+          Refresh
+        </button>
+      </div>
     </div>
 
-    <app-data-table
-      [title]="'Driver List'"
-      [columns]="columns"
-      [rows]="rows"
-      [loading]="loading"
-      [error]="error"
-    />
+    <div class="bg-white shadow rounded-lg p-4">
+      <h2 class="text-lg font-semibold text-gray-800 mb-3">
+        {{ editingId ? 'Edit Driver' : 'Create Driver' }}
+      </h2>
+
+      <div *ngIf="error" class="mb-3 rounded-md bg-red-50 p-3 text-sm text-red-700">
+        {{ error }}
+      </div>
+      <div *ngIf="success" class="mb-3 rounded-md bg-green-50 p-3 text-sm text-green-700">
+        {{ success }}
+      </div>
+
+      <form [formGroup]="form" class="grid grid-cols-1 md:grid-cols-2 gap-4" (ngSubmit)="submit()">
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Name</label>
+          <input formControlName="name" type="text" class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Email</label>
+          <input formControlName="email" type="email" class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Phone</label>
+          <input formControlName="phoneNumber" type="text" class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">License No</label>
+          <input formControlName="licenseNo" type="text" class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Status</label>
+          <select formControlName="status" class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm">
+            <option>Active</option>
+            <option>Inactive</option>
+            <option>Suspended</option>
+          </select>
+        </div>
+
+        <div class="md:col-span-2 flex gap-3">
+          <button
+            type="submit"
+            [disabled]="form.invalid || loading"
+            class="rounded-md bg-primary-600 text-white px-4 py-2 text-sm hover:bg-primary-700 disabled:opacity-50"
+          >
+            {{ editingId ? 'Update' : 'Create' }}
+          </button>
+          <button
+            type="button"
+            class="rounded-md border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            (click)="startCreate()"
+          >
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="bg-white shadow rounded-lg p-4">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-lg font-semibold text-gray-800">Driver List</h2>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th *ngFor="let col of columns" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {{ col.label }}
+              </th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr *ngFor="let row of rows">
+              <td class="px-4 py-2 text-sm text-gray-700">{{ row.driverId }}</td>
+              <td class="px-4 py-2 text-sm text-gray-700">{{ row.name }}</td>
+              <td class="px-4 py-2 text-sm text-gray-700">{{ row.email }}</td>
+              <td class="px-4 py-2 text-sm text-gray-700">{{ row.phoneNumber }}</td>
+              <td class="px-4 py-2 text-sm text-gray-700">{{ row.licenseNo }}</td>
+              <td class="px-4 py-2 text-sm text-gray-700">{{ row.status }}</td>
+              <td class="px-4 py-2 text-sm text-gray-700 space-x-2">
+                <button
+                  class="rounded-md border border-gray-300 px-2 py-1 text-xs text-gray-700 hover:bg-gray-100"
+                  (click)="startEdit(row)"
+                >
+                  Edit
+                </button>
+                <button
+                  class="rounded-md border border-red-200 px-2 py-1 text-xs text-red-700 hover:bg-red-50"
+                  (click)="delete(row)"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div *ngIf="rows.length === 0" class="py-6 text-center text-sm text-gray-600">
+          No drivers found.
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
