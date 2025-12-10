@@ -22,6 +22,7 @@ export interface AdminCar {
   year: number;
   pricePerDay: number;
   status: string;
+  imgURL?: string;
 }
 
 export interface AdminBooking {
@@ -108,6 +109,18 @@ export class AdminService {
 
   getCars(): Observable<ApiResponse<AdminCar[]>> {
     return this.api.get<AdminCar[]>('Admin/cars');
+  }
+
+  createCar(payload: Partial<AdminCar>): Observable<ApiResponse<any>> {
+    return this.api.post<any>('Admin/cars', payload);
+  }
+
+  updateCar(id: number, payload: Partial<AdminCar>): Observable<ApiResponse<any>> {
+    return this.api.put<any>(`Admin/cars/${id}`, payload);
+  }
+
+  deleteCar(id: number): Observable<ApiResponse<any>> {
+    return this.api.delete<any>(`Admin/cars/${id}`);
   }
 
   getBookings(): Observable<ApiResponse<AdminBooking[]>> {
