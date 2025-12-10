@@ -1,203 +1,217 @@
-<div class="min-h-screen">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-    <div class="flex items-center justify-between">
-      <div>
-        <h1 class="text-4xl font-bold text-gray-900 mb-2">Car Management</h1>
-        <p class="text-gray-600">Manage your fleet of rental cars</p>
-      </div>
-      <div class="flex gap-3">
-        <button
-          mat-raised-button
-          color="primary"
-          (click)="startCreate()"
-          class="flex items-center gap-2"
-        >
-          <mat-icon>add</mat-icon>
-          <span>New Car</span>
-        </button>
-        <button
-          mat-outlined-button
-          (click)="load()"
-          class="flex items-center gap-2"
-        >
-          <mat-icon>refresh</mat-icon>
-          <span>Refresh</span>
-        </button>
-      </div>
+<div class="min-h-[calc(100vh-112px)] p-4">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-4">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">Car Management</h1>
+      <p class="text-sm text-gray-600">Manage your fleet of rental cars</p>
+    </div>
+    <div class="flex gap-2">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="startCreate()"
+        class="flex items-center gap-1"
+      >
+        <mat-icon class="text-sm">add</mat-icon>
+        <span class="text-sm">New Car</span>
+      </button>
+      <button
+        mat-outlined-button
+        (click)="load()"
+        class="flex items-center gap-1"
+        [disabled]="loading"
+      >
+        <mat-icon class="text-sm">refresh</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content: Side by Side Layout -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+    <!-- Left: Form Section -->
+    <div class="lg:col-span-1">
+      <mat-card class="shadow-md">
+        <mat-card-header class="pb-3">
+          <div class="flex items-center gap-2 w-full">
+            <div class="bg-blue-100 rounded p-1.5">
+              <mat-icon class="text-blue-600 text-base">{{ editingId ? 'edit' : 'add_circle' }}</mat-icon>
+            </div>
+            <mat-card-title class="text-base font-semibold">
+              {{ editingId ? 'Edit Car' : 'Create New Car' }}
+            </mat-card-title>
+          </div>
+        </mat-card-header>
+        <mat-card-content>
+          <div *ngIf="error" class="mb-3 rounded-lg bg-red-50 border border-red-200 p-3 flex items-center gap-2 text-xs">
+            <mat-icon class="text-red-600 text-sm">error_outline</mat-icon>
+            <p class="text-red-800 flex-1">{{ error }}</p>
+          </div>
+          <div *ngIf="success" class="mb-3 rounded-lg bg-green-50 border border-green-200 p-3 flex items-center gap-2 text-xs">
+            <mat-icon class="text-green-600 text-sm">check_circle</mat-icon>
+            <p class="text-green-800 flex-1">{{ success }}</p>
+          </div>
+
+          <form [formGroup]="form" class="space-y-3" (ngSubmit)="submit()">
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Car Name</mat-label>
+              <input matInput formControlName="carName" placeholder="Enter car name" />
+              <mat-icon matPrefix>directions_car</mat-icon>
+              <mat-error *ngIf="form.get('carName')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Brand</mat-label>
+              <input matInput formControlName="brand" placeholder="Enter brand" />
+              <mat-icon matPrefix>branding_watermark</mat-icon>
+              <mat-error *ngIf="form.get('brand')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Model</mat-label>
+              <input matInput formControlName="model" placeholder="Enter model" />
+              <mat-icon matPrefix>category</mat-icon>
+              <mat-error *ngIf="form.get('model')?.hasError('required')">Required</mat-error>
+            </mat-form-field>
+
+            <div class="grid grid-cols-2 gap-3">
+              <mat-form-field appearance="outline">
+                <mat-label>Year</mat-label>
+                <input matInput type="number" formControlName="year" placeholder="Year" />
+                <mat-icon matPrefix>calendar_today</mat-icon>
+                <mat-error *ngIf="form.get('year')?.hasError('required')">Required</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Price/Day</mat-label>
+                <input matInput type="number" formControlName="pricePerDay" placeholder="Price" />
+                <mat-icon matPrefix>attach_money</mat-icon>
+                <mat-error *ngIf="form.get('pricePerDay')?.hasError('required')">Required</mat-error>
+              </mat-form-field>
+            </div>
+
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Status</mat-label>
+              <mat-select formControlName="status">
+                <mat-option value="Available">Available</mat-option>
+                <mat-option value="Booked">Booked</mat-option>
+                <mat-option value="Maintenance">Maintenance</mat-option>
+              </mat-select>
+              <mat-icon matPrefix>info</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Image URL</mat-label>
+              <input matInput formControlName="imgURL" placeholder="Enter image URL" />
+              <mat-icon matPrefix>image</mat-icon>
+            </mat-form-field>
+
+            <div class="flex gap-2 pt-2">
+              <button
+                mat-raised-button
+                color="primary"
+                type="submit"
+                [disabled]="form.invalid || loading"
+                class="flex-1 flex items-center justify-center gap-1"
+              >
+                <mat-icon class="text-sm">{{ editingId ? 'update' : 'add' }}</mat-icon>
+                <span>{{ editingId ? 'Update' : 'Create' }}</span>
+              </button>
+              <button
+                mat-outlined-button
+                type="button"
+                (click)="startCreate()"
+                [disabled]="loading"
+              >
+                Clear
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
     </div>
 
-    <mat-card class="shadow-lg">
-      <mat-card-header>
-        <div class="flex items-center gap-3 mb-4">
-          <div class="bg-blue-100 rounded-lg p-2">
-            <mat-icon class="text-blue-600">{{ editingId ? 'edit' : 'add_circle' }}</mat-icon>
-          </div>
-          <mat-card-title class="text-xl font-semibold">
-            {{ editingId ? 'Edit Car' : 'Create New Car' }}
-          </mat-card-title>
-        </div>
-      </mat-card-header>
-      <mat-card-content>
-        <div *ngIf="error" class="mb-4 rounded-lg bg-red-50 border border-red-200 p-4 flex items-center gap-3">
-          <mat-icon class="text-red-600">error_outline</mat-icon>
-          <p class="text-sm font-medium text-red-800">{{ error }}</p>
-        </div>
-        <div *ngIf="success" class="mb-4 rounded-lg bg-green-50 border border-green-200 p-4 flex items-center gap-3">
-          <mat-icon class="text-green-600">check_circle</mat-icon>
-          <p class="text-sm font-medium text-green-800">{{ success }}</p>
-        </div>
-
-        <form [formGroup]="form" class="grid grid-cols-1 md:grid-cols-2 gap-6" (ngSubmit)="submit()">
-          <mat-form-field appearance="outline">
-            <mat-label>Car Name</mat-label>
-            <input matInput formControlName="carName" placeholder="Enter car name" />
-            <mat-icon matPrefix>directions_car</mat-icon>
-            <mat-error *ngIf="form.get('carName')?.hasError('required')">Car name is required</mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Brand</mat-label>
-            <input matInput formControlName="brand" placeholder="Enter brand" />
-            <mat-icon matPrefix>branding_watermark</mat-icon>
-            <mat-error *ngIf="form.get('brand')?.hasError('required')">Brand is required</mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Model</mat-label>
-            <input matInput formControlName="model" placeholder="Enter model" />
-            <mat-icon matPrefix>category</mat-icon>
-            <mat-error *ngIf="form.get('model')?.hasError('required')">Model is required</mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Year</mat-label>
-            <input matInput type="number" formControlName="year" placeholder="Enter year" />
-            <mat-icon matPrefix>calendar_today</mat-icon>
-            <mat-error *ngIf="form.get('year')?.hasError('required')">Year is required</mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Price per Day</mat-label>
-            <input matInput type="number" formControlName="pricePerDay" placeholder="Enter price" />
-            <mat-icon matPrefix>attach_money</mat-icon>
-            <mat-error *ngIf="form.get('pricePerDay')?.hasError('required')">Price is required</mat-error>
-            <mat-error *ngIf="form.get('pricePerDay')?.hasError('min')">Price must be positive</mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Status</mat-label>
-            <mat-select formControlName="status">
-              <mat-option value="Available">Available</mat-option>
-              <mat-option value="Booked">Booked</mat-option>
-              <mat-option value="Maintenance">Maintenance</mat-option>
-            </mat-select>
-            <mat-icon matPrefix>info</mat-icon>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" class="md:col-span-2">
-            <mat-label>Image URL</mat-label>
-            <input matInput formControlName="imgURL" placeholder="Enter image URL" />
-            <mat-icon matPrefix>image</mat-icon>
-          </mat-form-field>
-
-          <div class="md:col-span-2 flex gap-3 pt-2">
-            <button
-              mat-raised-button
-              color="primary"
-              type="submit"
-              [disabled]="form.invalid || loading"
-              class="flex items-center gap-2"
-            >
-              <mat-icon>{{ editingId ? 'update' : 'add' }}</mat-icon>
-              <span>{{ editingId ? 'Update Car' : 'Create Car' }}</span>
-            </button>
-            <button
-              mat-outlined-button
-              type="button"
-              (click)="startCreate()"
-            >
-              Clear
-            </button>
-          </div>
-        </form>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card class="shadow-lg">
-      <mat-card-header>
-        <div class="flex items-center justify-between w-full mb-4">
-          <div class="flex items-center gap-3">
-            <div class="bg-purple-100 rounded-lg p-2">
-              <mat-icon class="text-purple-600">list</mat-icon>
+    <!-- Right: Table Section -->
+    <div class="lg:col-span-2">
+      <mat-card class="shadow-md">
+        <mat-card-header class="pb-3">
+          <div class="flex items-center justify-between w-full">
+            <div class="flex items-center gap-2">
+              <div class="bg-purple-100 rounded p-1.5">
+                <mat-icon class="text-purple-600 text-base">list</mat-icon>
+              </div>
+              <mat-card-title class="text-base font-semibold">Car List</mat-card-title>
             </div>
-            <mat-card-title class="text-xl font-semibold">Car List</mat-card-title>
+            <span class="text-xs text-gray-500 font-medium">{{ rows.length }} {{ rows.length === 1 ? 'car' : 'cars' }}</span>
           </div>
-          <span class="text-sm text-gray-500">{{ rows.length }} cars</span>
-        </div>
-      </mat-card-header>
-      <mat-card-content>
-        <div *ngIf="loading" class="flex items-center justify-center py-12">
-          <mat-spinner diameter="40"></mat-spinner>
-          <span class="ml-4 text-gray-600">Loading cars...</span>
-        </div>
+        </mat-card-header>
+        <mat-card-content>
+          <div *ngIf="loading" class="flex items-center justify-center py-12">
+            <mat-spinner diameter="40"></mat-spinner>
+            <span class="ml-3 text-sm text-gray-600">Loading cars...</span>
+          </div>
 
-        <div *ngIf="!loading" class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gradient-to-r from-gray-50 to-gray-100">
-              <tr>
-                <th *ngFor="let col of columns" class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                  {{ col.label }}
-                </th>
-                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-              <tr *ngFor="let row of rows" class="hover:bg-gray-50 transition-colors">
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ row.carId }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ row.carName }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ row.brand }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ row.model }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ row.year }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">{{ row.pricePerDay | currency }}</td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full"
-                    [ngClass]="{
-                      'bg-green-100 text-green-800': row.status === 'Available',
-                      'bg-yellow-100 text-yellow-800': row.status === 'Booked',
-                      'bg-red-100 text-red-800': row.status === 'Maintenance'
-                    }">
-                    {{ row.status }}
-                  </span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                  <button
-                    mat-icon-button
-                    color="primary"
-                    (click)="startEdit(row)"
-                    matTooltip="Edit car"
-                  >
-                    <mat-icon>edit</mat-icon>
-                  </button>
-                  <button
-                    mat-icon-button
-                    color="warn"
-                    (click)="delete(row)"
-                    matTooltip="Delete car"
-                  >
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div *ngIf="rows.length === 0" class="py-12 text-center">
-            <mat-icon class="text-gray-400 text-6xl mb-4">directions_car</mat-icon>
-            <p class="text-gray-500 text-lg font-medium">No cars found</p>
-            <p class="text-gray-400 text-sm mt-2">Click "New Car" to add your first car</p>
+          <div *ngIf="!loading" class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th *ngFor="let col of columns" class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    {{ col.label }}
+                  </th>
+                  <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let row of rows" class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">{{ row.carId }}</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{{ row.carName }}</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{{ row.brand }}</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{{ row.model }}</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{{ row.year }}</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm font-semibold text-gray-900">{{ row.pricePerDay | currency }}</td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span class="px-2.5 py-1 inline-flex text-xs font-semibold rounded-full"
+                      [ngClass]="{
+                        'bg-green-100 text-green-800': row.status === 'Available',
+                        'bg-yellow-100 text-yellow-800': row.status === 'Booked',
+                        'bg-red-100 text-red-800': row.status === 'Maintenance'
+                      }">
+                      {{ row.status }}
+                    </span>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
+                    <div class="flex gap-1">
+                      <button
+                        mat-icon-button
+                        color="primary"
+                        (click)="startEdit(row)"
+                        matTooltip="Edit car"
+                        [disabled]="loading"
+                      >
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button
+                        mat-icon-button
+                        color="warn"
+                        (click)="delete(row)"
+                        matTooltip="Delete car"
+                        [disabled]="loading"
+                      >
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div *ngIf="rows.length === 0" class="py-12 text-center">
+              <mat-icon class="text-gray-400 text-5xl mb-3">directions_car</mat-icon>
+              <p class="text-gray-500 text-base font-medium">No cars found</p>
+              <p class="text-gray-400 text-sm mt-1">Click "New Car" to add your first car</p>
+            </div>
           </div>
-        </div>
-      </mat-card-content>
-    </mat-card>
+        </mat-card-content>
+      </mat-card>
+    </div>
   </div>
 </div>
 
