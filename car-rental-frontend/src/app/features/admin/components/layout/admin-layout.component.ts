@@ -9,5 +9,15 @@ import { RouterModule } from '@angular/router';
   templateUrl: './admin-layout.component.html',
   styleUrl: './admin-layout.component.css'
 })
-export class AdminLayoutComponent {}
+export class AdminLayoutComponent {
+  showSidebar = false;
+
+  toggleSidebar() {
+    this.showSidebar = !this.showSidebar;
+  }
+
+  closeSidebar() {
+    this.showSidebar = false;
+  }
+}
 

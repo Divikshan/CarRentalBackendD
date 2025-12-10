@@ -1,8 +1,12 @@
 <div class="min-h-screen bg-gray-100 flex">
-  <!-- Sidebar -->
-  <aside class="w-64 bg-white border-r border-gray-200 flex flex-col">
-    <div class="h-16 flex items-center px-4 border-b border-gray-200">
+  <!-- Sidebar (desktop + mobile toggle) -->
+  <div
+    class="fixed inset-y-0 left-0 z-30 w-64 transform bg-white border-r border-gray-200 transition-transform duration-200 ease-in-out lg:static lg:translate-x-0"
+    [class.-translate-x-full]="!showSidebar && !isDesktop()"
+  >
+    <div class="h-16 flex items-center px-4 border-b border-gray-200 justify-between">
       <div class="text-lg font-semibold text-gray-800">Admin Panel</div>
+      <button class="lg:hidden text-sm text-gray-500" (click)="closeSidebar()">✕</button>
     </div>
     <nav class="flex-1 overflow-y-auto py-4">
       <ul class="space-y-1 px-2">
@@ -68,33 +72,28 @@
         </li>
       </ul>
     </nav>
-  </aside>
+  </div>
 
-  <!-- Mobile top nav -->
-  <div class="lg:hidden fixed top-0 inset-x-0 z-10 bg-white border-b border-gray-200">
+  <!-- Mobile top bar -->
+  <div class="lg:hidden fixed top-0 inset-x-0 z-20 bg-white border-b border-gray-200">
     <div class="h-14 flex items-center justify-between px-4">
       <div class="text-base font-semibold text-gray-800">Admin Panel</div>
-      <select
-        class="text-sm border border-gray-300 rounded-md px-2 py-1"
-        (change)="location.assign(($event.target as HTMLSelectElement).value)"
-      >
-        <option value="/admin/dashboard">Dashboard</option>
-        <option value="/admin/cars">Cars</option>
-        <option value="/admin/bookings">Bookings</option>
-        <option value="/admin/customers">Customers</option>
-        <option value="/admin/staff">Staff</option>
-        <option value="/admin/drivers">Drivers</option>
-        <option value="/admin/offers">Offers</option>
-        <option value="/admin/faqs">FAQs</option>
-        <option value="/admin/payments">Payments</option>
-        <option value="/admin/notifications">Notifications</option>
-      </select>
+      <button class="text-sm text-gray-700 border border-gray-300 rounded-md px-3 py-1" (click)="toggleSidebar()">
+        Menu
+      </button>
     </div>
   </div>
 
+  <!-- Overlay for mobile -->
+  <div
+    class="fixed inset-0 bg-black/30 z-10 lg:hidden"
+    *ngIf="showSidebar"
+    (click)="closeSidebar()"
+  ></div>
+
   <!-- Main content -->
   <main class="flex-1 min-h-screen">
-    <div class="lg:ml-0 lg:pt-0 pt-14">
+    <div class="lg:pt-0 pt-14">
       <router-outlet />
     </div>
   </main>
