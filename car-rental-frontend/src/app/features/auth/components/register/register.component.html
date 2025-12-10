@@ -1,0 +1,162 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8">
+    <div>
+      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        Create your account
+      </h2>
+    </div>
+    <form class="mt-8 space-y-6" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="space-y-4">
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            formControlName="name"
+            required
+            class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+            placeholder="Full Name"
+          />
+          @if (registerForm.get('name')?.invalid && registerForm.get('name')?.touched) {
+            <p class="mt-1 text-sm text-red-600">Name should only contain letters and spaces (2-50 characters)</p>
+          }
+        </div>
+
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            formControlName="email"
+            required
+            class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+            placeholder="Email address"
+          />
+          @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+            <p class="mt-1 text-sm text-red-600">Please enter a valid email</p>
+          }
+        </div>
+
+        <div>
+          <label for="phoneNumber" class="block text-sm font-medium text-gray-700">Phone Number</label>
+          <input
+            id="phoneNumber"
+            name="phoneNumber"
+            type="tel"
+            formControlName="phoneNumber"
+            required
+            class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+            placeholder="10-digit phone number"
+          />
+          @if (registerForm.get('phoneNumber')?.invalid && registerForm.get('phoneNumber')?.touched) {
+            <p class="mt-1 text-sm text-red-600">Phone number must be exactly 10 digits</p>
+          }
+        </div>
+
+        <div>
+          <label for="dateOfBirth" class="block text-sm font-medium text-gray-700">Date of Birth</label>
+          <input
+            id="dateOfBirth"
+            name="dateOfBirth"
+            type="date"
+            formControlName="dateOfBirth"
+            required
+            class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+          />
+          @if (registerForm.get('dateOfBirth')?.invalid && registerForm.get('dateOfBirth')?.touched) {
+            <p class="mt-1 text-sm text-red-600">Date of birth is required</p>
+          }
+        </div>
+
+        <div>
+          <label for="gender" class="block text-sm font-medium text-gray-700">Gender</label>
+          <select
+            id="gender"
+            name="gender"
+            formControlName="gender"
+            required
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+          >
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+          @if (registerForm.get('gender')?.invalid && registerForm.get('gender')?.touched) {
+            <p class="mt-1 text-sm text-red-600">Gender is required</p>
+          }
+        </div>
+
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            formControlName="password"
+            required
+            class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+            placeholder="Password"
+          />
+          @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+            <p class="mt-1 text-sm text-red-600">Password must be at least 8 characters with uppercase, lowercase, number, and special character</p>
+          }
+        </div>
+
+        <div>
+          <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+          <input
+            id="confirmPassword"
+            name="confirmPassword"
+            type="password"
+            formControlName="confirmPassword"
+            required
+            class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+            placeholder="Confirm Password"
+          />
+          @if (registerForm.get('confirmPassword')?.hasError('passwordMismatch')) {
+            <p class="mt-1 text-sm text-red-600">Passwords do not match</p>
+          }
+        </div>
+      </div>
+
+      @if (errorMessage) {
+        <div class="rounded-md bg-red-50 p-4">
+          <p class="text-sm font-medium text-red-800">{{ errorMessage }}</p>
+        </div>
+      }
+
+      @if (successMessage) {
+        <div class="rounded-md bg-green-50 p-4">
+          <p class="text-sm font-medium text-green-800">{{ successMessage }}</p>
+        </div>
+      }
+
+      <div>
+        <button
+          type="submit"
+          [disabled]="registerForm.invalid || isLoading"
+          class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          @if (isLoading) {
+            <span>Creating account...</span>
+          } @else {
+            <span>Sign up</span>
+          }
+        </button>
+      </div>
+
+      <div class="text-center">
+        <p class="text-sm text-gray-600">
+          Already have an account?
+          <a routerLink="/auth/login" class="font-medium text-primary-600 hover:text-primary-500">
+            Sign in
+          </a>
+        </p>
+      </div>
+    </form>
+  </div>
+</div>
+
