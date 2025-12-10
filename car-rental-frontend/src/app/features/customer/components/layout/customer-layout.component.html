@@ -1,0 +1,39 @@
+<div class="min-h-screen bg-gray-100 flex">
+  <!-- Sidebar -->
+  <aside class="w-64 bg-white border-r border-gray-200 hidden lg:flex flex-col">
+    <div class="h-16 flex items-center px-4 border-b border-gray-200">
+      <div class="text-lg font-semibold text-gray-800">Customer Panel</div>
+    </div>
+    <nav class="flex-1 overflow-y-auto py-4">
+      <ul class="space-y-1 px-2">
+        <li>
+          <a routerLink="/customer/dashboard" routerLinkActive="bg-gray-100 text-primary-700"
+             class="flex items-center px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50">
+            Dashboard
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Mobile top nav -->
+  <div class="lg:hidden fixed top-0 inset-x-0 z-10 bg-white border-b border-gray-200">
+    <div class="h-14 flex items-center justify-between px-4">
+      <div class="text-base font-semibold text-gray-800">Customer Panel</div>
+      <select
+        class="text-sm border border-gray-300 rounded-md px-2 py-1"
+        (change)="location.assign(($event.target as HTMLSelectElement).value)"
+      >
+        <option value="/customer/dashboard">Dashboard</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <main class="flex-1 min-h-screen">
+    <div class="lg:ml-0 lg:pt-0 pt-14">
+      <router-outlet />
+    </div>
+  </main>
+</div>
+

@@ -27,10 +27,16 @@ export const routes: Routes = [
   {
     path: 'customer',
     canActivate: [authGuard, roleGuard(['Customer'])],
+    loadComponent: () => import('./features/customer/components/layout/customer-layout.component').then(m => m.CustomerLayoutComponent),
     children: [
       {
         path: 'dashboard',
         loadComponent: () => import('./features/customer/components/dashboard/dashboard.component').then(m => m.DashboardComponent)
+      },
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'dashboard'
       }
     ]
   },
